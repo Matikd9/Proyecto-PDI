@@ -14,7 +14,7 @@ de Permanencia Definitiva**, desplegada en Google Cloud (`southamerica-west1`) m
 |---|---|
 | API (FastAPI) | ✅ Implementada · 42 pruebas automáticas pasan (SQLite y PostgreSQL 16) |
 | Frontend (React) | ✅ Implementado · flujo completo probado en navegador contra la API local |
-| Infraestructura (Terraform) | ⏳ Pendiente |
+| Infraestructura (Terraform) | 🟡 Bootstrap y base aplicados en `lab3-pdi-vpm` (ver `docs/03-despliegue.md`); faltan red, Cloud SQL y Cloud Run |
 | Despliegue en GCP | ⏳ Pendiente |
 
 ## Estructura
@@ -23,7 +23,7 @@ de Permanencia Definitiva**, desplegada en Google Cloud (`southamerica-west1`) m
 app/api/            API de Trámites (FastAPI + SQLAlchemy + Alembic)
 app/web/            Portal web (React + Vite, servido por nginx)
 app/notificaciones/ Servicio de notificaciones (Pub/Sub) — pendiente
-infra/              Terraform — pendiente
+infra/              Terraform: bootstrap/ (estado local) y main/ (estado en GCS)
 docs/               Documentación y registro de decisiones
 ```
 

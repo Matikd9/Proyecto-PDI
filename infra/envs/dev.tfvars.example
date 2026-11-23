@@ -1,0 +1,4 @@
+# Copiar a dev.tfvars (ignorado por git) y ajustar.
+project_id   = "lab3-pdi-vpm"
+region       = "southamerica-west1"
+dominios_web = ["localhost"]

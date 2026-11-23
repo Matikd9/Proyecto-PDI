@@ -105,9 +105,24 @@ FastAPI + SQLAlchemy 2 + Alembic. Rutas bajo `/api/v1`, documentación en `/api/
   navegación.
 - Los estilos están en un solo archivo, `src/estilos.css`, con variables de color en `:root`.
 
-## Infraestructura objetivo (diseño aprobado, aún no implementada)
+## Infraestructura
 
-Pendiente: `app/notificaciones`, `infra/`, `scripts/`. Diseño acordado:
+Proyecto GCP `lab3-pdi-vpm`, asociado a la cuenta de facturación de educación, con una alerta de presupuesto
+de USD 25 (D-11). El procedimiento paso a paso está en `docs/03-despliegue.md`.
+
+```powershell
+cd infra/main
+terraform init "-backend-config=bucket=lab3-pdi-vpm-tfstate"
+terraform plan "-var-file=../envs/dev.tfvars"    # en PowerShell, -var-file y -out van entre comillas
+```
+
+- **Ya aplicado**: `infra/bootstrap` (estado local: bucket del estado, bucket de build, Artifact Registry,
+  `sa-build`) y la base de `infra/main` (APIs, bucket de documentos, `sa-api`/`sa-web`, Identity Platform, API
+  key web).
+- El proveedor usa `user_project_override`/`billing_project`, porque Identity Toolkit y API Keys exigen un
+  proyecto de cuota cuando se usan credenciales de usuario.
+- Pendiente: `app/notificaciones`, red, Cloud SQL, Secret Manager, Pub/Sub, Cloud Run y `scripts/`. Diseño
+  acordado:
 
 - **Cloud Run**: `web` (React + Vite + nginx, configuración inyectada al arrancar el contenedor), `api`
   (Direct VPC egress) y `notificaciones` (ingreso interno, alimentado por un push de Pub/Sub con OIDC).

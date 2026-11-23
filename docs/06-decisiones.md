@@ -39,5 +39,15 @@ Cada decisión indica el contexto, lo decidido y su impacto. Se actualiza a medi
 ## D-09 · Eventos sin outbox
 - Tras confirmar cada transacción la API publica el evento en Pub/Sub. Si la publicación falla se registra el error, pero la solicitud no se revierte. Un patrón *outbox* sería lo correcto en producción; queda documentado como limitación.
 
+## D-11 · Proyecto GCP y control de gasto
+- **Proyecto:** `lab3-pdi-vpm` (sin organización), creado el 23-11-2026 con `gcloud projects create`.
+- **Facturación:** asociado a la "Cuenta de facturación para educación" (créditos del curso), no a una cuenta personal.
+- **Presupuesto:** alerta de USD 25 filtrada al proyecto, con avisos al 40 % (USD 10), 80 % y 100 %. La alerta
+  solo notifica por correo; **no detiene el gasto**. Para cortar costos hay que pausar Cloud SQL o ejecutar
+  `terraform destroy`.
+- Comandos para reproducir en otra cuenta:
+  `gcloud projects create <id>` → `gcloud billing projects link <id> --billing-account=<cuenta>` →
+  `gcloud billing budgets create --billing-account=<cuenta> --budget-amount=25USD --filter-projects=projects/<id> --threshold-rule=percent=0.4 --threshold-rule=percent=0.8 --threshold-rule=percent=1.0`.
+
 ## D-10 · Modo de autenticación de desarrollo
 - Para desarrollo y pruebas locales existe `AUTH_MODE=dev` (token `dev|uid|email`). La aplicación **se niega a arrancar** en ese modo si detecta que corre en Cloud Run (`K_SERVICE`), por lo que no puede activarse en la nube por error.
