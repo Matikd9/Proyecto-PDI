@@ -12,8 +12,8 @@ de Permanencia Definitiva**, desplegada en Google Cloud (`southamerica-west1`) m
 
 | Componente | Estado |
 |---|---|
-| API (FastAPI) | ✅ Implementada · 42 pruebas automáticas pasan (SQLite) |
-| Frontend (React) | ⏳ Pendiente |
+| API (FastAPI) | ✅ Implementada · 42 pruebas automáticas pasan (SQLite y PostgreSQL 16) |
+| Frontend (React) | ✅ Implementado · flujo completo probado en navegador contra la API local |
 | Infraestructura (Terraform) | ⏳ Pendiente |
 | Despliegue en GCP | ⏳ Pendiente |
 
@@ -21,7 +21,7 @@ de Permanencia Definitiva**, desplegada en Google Cloud (`southamerica-west1`) m
 
 ```
 app/api/            API de Trámites (FastAPI + SQLAlchemy + Alembic)
-app/web/            Portal web (React + Vite) — pendiente
+app/web/            Portal web (React + Vite, servido por nginx)
 app/notificaciones/ Servicio de notificaciones (Pub/Sub) — pendiente
 infra/              Terraform — pendiente
 docs/               Documentación y registro de decisiones
@@ -39,10 +39,24 @@ pip install -e ".[dev]"
 pytest                      # pruebas automáticas (SQLite en memoria)
 ```
 
-Con PostgreSQL 16 real (requiere Docker Desktop encendido), desde la raíz del repositorio:
+Entorno completo con PostgreSQL 16 real (requiere Docker Desktop encendido), desde la raíz del repositorio:
 
 ```powershell
-docker compose up --build   # API en http://localhost:8080/api/docs
+docker compose up --build   # portal http://localhost:8081 · API http://localhost:8080/api/docs
+```
+
+Frontend en modo desarrollo (recarga en caliente, usa la API de `docker compose` en el puerto 8080):
+
+```powershell
+cd app/web
+npm install
+npm run dev                 # http://localhost:5173
+```
+
+Primer administrador en local (la cuenta debe haber ingresado antes al portal):
+
+```powershell
+docker compose exec api python -m app.cli bootstrap-admin --email admin@ficticio.cl
 ```
 
 En modo local la autenticación usa tokens de desarrollo (`Authorization: Bearer dev|<uid>|<email>`).

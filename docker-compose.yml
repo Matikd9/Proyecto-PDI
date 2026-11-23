@@ -1,5 +1,5 @@
-# Entorno local: PostgreSQL 16 (misma versión que Cloud SQL) + API en modo desarrollo.
-# Uso:  docker compose up --build
+# Entorno local: PostgreSQL 16 (misma versión que Cloud SQL) + API + portal, en modo desarrollo.
+# Uso:  docker compose up --build   → portal http://localhost:8081 · API http://localhost:8080/api/docs
 services:
   db:
     image: postgres:16-alpine
@@ -23,7 +23,8 @@ services:
       LOCAL_STORAGE_DIR: /tmp/docs
       EVENTS_MODE: log
       DATABASE_URL: postgresql+psycopg://tramites:tramites-local@db:5432/tramites
-      CORS_ORIGINS: http://localhost:5173
+      CORS_ORIGINS: http://localhost:5173,http://localhost:8081
+      WEB_URL: http://localhost:8081
     depends_on:
       db: {condition: service_healthy}
 
@@ -33,3 +34,10 @@ services:
     ports: ["8080:8080"]
     depends_on:
       migrate: {condition: service_completed_successfully}
+
+  web:
+    build: ./app/web
+    environment:
+      API_URL: http://localhost:8080
+      AUTH_MODE: dev
+    ports: ["8081:8080"]
