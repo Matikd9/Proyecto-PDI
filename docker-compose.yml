@@ -1,0 +1,35 @@
+# Entorno local: PostgreSQL 16 (misma versión que Cloud SQL) + API en modo desarrollo.
+# Uso:  docker compose up --build
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: tramites
+      POSTGRES_USER: tramites
+      POSTGRES_PASSWORD: tramites-local   # solo local; en GCP la clave vive en Secret Manager
+    ports: ["5432:5432"]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U tramites -d tramites"]
+      interval: 3s
+      retries: 20
+
+  migrate:
+    build: ./app/api
+    command: ["python", "-m", "app.cli", "migrate"]
+    environment: &api_env
+      ENTORNO: local
+      AUTH_MODE: dev
+      STORAGE_MODE: local
+      LOCAL_STORAGE_DIR: /tmp/docs
+      EVENTS_MODE: log
+      DATABASE_URL: postgresql+psycopg://tramites:tramites-local@db:5432/tramites
+      CORS_ORIGINS: http://localhost:5173
+    depends_on:
+      db: {condition: service_healthy}
+
+  api:
+    build: ./app/api
+    environment: *api_env
+    ports: ["8080:8080"]
+    depends_on:
+      migrate: {condition: service_completed_successfully}

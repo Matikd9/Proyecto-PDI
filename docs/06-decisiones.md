@@ -1,0 +1,43 @@
+# Registro de decisiones — Laboratorio 3 (Grupo VPM)
+
+Cada decisión indica el contexto, lo decidido y su impacto. Se actualiza a medida que avanza el proyecto.
+
+## D-01 · Alcance: un solo ambiente DEV
+- **Contexto:** el Lab 2 define DEV, QA y PROD como proyectos separados. El presupuesto es de ~USD 150 en créditos.
+- **Decisión:** se despliega solo DEV. El código Terraform queda parametrizado por `.tfvars`, de modo que QA y PROD serían otro proyecto con el mismo código.
+- **Impacto:** se demuestra el principio "mismo código, distinto tamaño" sin triplicar costos.
+
+## D-02 · Stack
+- React + Vite + TypeScript (frontend estático servido por nginx en Cloud Run).
+- Python 3.12 + FastAPI + SQLAlchemy 2 + Alembic (API).
+- PostgreSQL 16 en Cloud SQL (edición **Enterprise**, `db-f1-micro`).
+- Terraform para toda la infraestructura; Cloud Build + Artifact Registry para imágenes.
+
+## D-03 · Cloud SQL Enterprise + db-f1-micro
+- **Contexto:** en PostgreSQL 16+ la edición por defecto es Enterprise Plus, que no admite máquinas de núcleo compartido.
+- **Decisión:** fijar `edition = "ENTERPRISE"` y `tier = "db-f1-micro"` (USD 0,0147/h en Santiago, verificado nov-2026). Sin SLA: aceptable para una PoC.
+- **Impacto:** máximo 25 conexiones → pool de 3+2 por instancia y máximo 2 instancias de Cloud Run.
+
+## D-04 · Los roles viven en la base de datos
+- **Contexto:** se exige que los roles privilegiados no puedan asignarse desde el frontend ni por registro público.
+- **Decisión:** Identity Platform solo autentica (quién es). El rol está en `usuarios.rol` y la API lo consulta en cada petición. Todo usuario nuevo nace `ciudadano`. El primer administrador se crea con el Cloud Run Job `bootstrap-admin` (protegido por IAM de GCP); los siguientes, solo vía `PATCH /admin/usuarios/{id}`.
+- **Impacto:** un cambio o revocación de rol tiene efecto inmediato; no depende de custom claims del token.
+
+## D-05 · Acceso a recursos ajenos devuelve 404
+- Un ciudadano que pide una solicitud o documento ajeno recibe 404 (no 403), para no revelar su existencia. Los identificadores son UUID.
+
+## D-06 · Documentos solo a través de la API
+- Bucket privado con prevención de acceso público. No se usan URLs firmadas: la API valida permisos y entrega el archivo. Se valida el tipo por la firma binaria (PDF/PNG/JPEG), tamaño máximo 5 MB, máximo 6 por solicitud, nombres de objeto `solicitudes/{uuid}/{uuid}`.
+
+## D-07 · Validación automática síncrona con simuladores deterministas
+- **Contexto:** no hay acceso a Registro Civil, Migraciones, Sistema Central PDI ni Interpol.
+- **Decisión:** módulo `simuladores` con reglas deterministas sobre números de documento ficticios (ver `docs/04-pruebas.md`). Una alerta deriva a `EN_REVISION` sin informar el motivo al ciudadano ni rechazar (regla del Lab 1). Cloud Workflows queda fuera de alcance; la orquestación vive en la API.
+
+## D-08 · Migración inicial basada en los modelos
+- La migración `0001` crea el esquema a partir de los modelos SQLAlchemy y carga el catálogo de trámites. Las migraciones posteriores usarán operaciones Alembic explícitas. Se ejecuta con el Cloud Run Job `migrate`, nunca al arrancar la API (evita carreras entre instancias).
+
+## D-09 · Eventos sin outbox
+- Tras confirmar cada transacción la API publica el evento en Pub/Sub. Si la publicación falla se registra el error, pero la solicitud no se revierte. Un patrón *outbox* sería lo correcto en producción; queda documentado como limitación.
+
+## D-10 · Modo de autenticación de desarrollo
+- Para desarrollo y pruebas locales existe `AUTH_MODE=dev` (token `dev|uid|email`). La aplicación **se niega a arrancar** en ese modo si detecta que corre en Cloud Run (`K_SERVICE`), por lo que no puede activarse en la nube por error.
