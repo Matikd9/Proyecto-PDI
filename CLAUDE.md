@@ -116,13 +116,22 @@ terraform init "-backend-config=bucket=lab3-pdi-vpm-tfstate"
 terraform plan "-var-file=../envs/dev.tfvars"    # en PowerShell, -var-file y -out van entre comillas
 ```
 
-- **Ya aplicado**: `infra/bootstrap` (estado local: bucket del estado, bucket de build, Artifact Registry,
-  `sa-build`) y la base de `infra/main` (APIs, bucket de documentos, `sa-api`/`sa-web`, Identity Platform, API
-  key web).
+Desplegado y probado de punta a punta en https://web-636986210007.southamerica-west1.run.app. Para
+desplegar una versión nueva: `./scripts/deploy.ps1` (Cloud Build → `terraform apply` con `image_tag` = SHA
+corto → job `migrate`).
+
+- `infra/bootstrap` (estado local, solo en la PC de quien lo aplicó): bucket del estado, bucket de build,
+  Artifact Registry y `sa-build`. `infra/main` (estado en GCS): todo lo demás.
 - El proveedor usa `user_project_override`/`billing_project`, porque Identity Toolkit y API Keys exigen un
   proyecto de cuota cuando se usan credenciales de usuario.
-- Pendiente: `app/notificaciones`, red, Cloud SQL, Secret Manager, Pub/Sub, Cloud Run y `scripts/`. Diseño
-  acordado:
+- Cloud Run expone dos URLs por servicio. CORS, `WEB_URL`, los dominios de Identity Platform y la API key usan
+  la URL **determinista** (`<servicio>-<número de proyecto>.<región>.run.app`), calculada en `run.tf`
+  (`local.url_web`/`url_api`). Eso también evita el ciclo portal ↔ API key. Las salidas `url_portal`/`url_api`
+  muestran esas URLs.
+- Cloud Build usa `cloudbuild.yaml` con `logging: CLOUD_LOGGING_ONLY` (la cuenta `sa-build` no tiene bucket
+  de logs), por eso `gcloud builds submit` no muestra los logs en la terminal.
+- Cloud SQL es lo único con costo fijo (≈ USD 0,44/día). Se pausa con `-var=sql_activa=NEVER`.
+- Diseño acordado (referencia):
 
 - **Cloud Run**: `web` (React + Vite + nginx, configuración inyectada al arrancar el contenedor), `api`
   (Direct VPC egress) y `notificaciones` (ingreso interno, alimentado por un push de Pub/Sub con OIDC).

@@ -16,7 +16,11 @@ de Permanencia Definitiva**, desplegada en Google Cloud (`southamerica-west1`) m
 | Frontend (React) | ✅ Implementado · flujo completo probado en navegador contra la API local |
 | Autenticación real (Identity Platform) | ✅ Registro, login, roles y revocación probados contra GCP (ver `docs/04-pruebas.md`) |
 | Documentos en Cloud Storage | ✅ Bucket privado probado (subida, descarga, no sobrescritura, acceso anónimo bloqueado) |
-| Infraestructura (Terraform) | 🟡 Bootstrap y base aplicados en `lab3-pdi-vpm` (ver `docs/03-despliegue.md`); faltan red, Cloud SQL y Cloud Run |
+| Infraestructura (Terraform) | ✅ Aplicada en `lab3-pdi-vpm` sin drift (ver `docs/03-despliegue.md`) |
+| Despliegue en GCP | ✅ Flujo completo probado en la URL pública (ver `docs/04-pruebas.md`) |
+
+**URL de ejemplo:** https://web-636986210007.southamerica-west1.run.app
+(si Cloud SQL está pausado para ahorrar créditos, el portal carga pero no responde a operaciones con datos)
 | Despliegue en GCP | ⏳ Pendiente |
 
 ## Estructura
@@ -24,7 +28,8 @@ de Permanencia Definitiva**, desplegada en Google Cloud (`southamerica-west1`) m
 ```
 app/api/            API de Trámites (FastAPI + SQLAlchemy + Alembic)
 app/web/            Portal web (React + Vite, servido por nginx)
-app/notificaciones/ Servicio de notificaciones (Pub/Sub) — pendiente
+app/notificaciones/ Servicio de notificaciones (Pub/Sub push → Cloud Logging, correo simulado)
+scripts/deploy.ps1  Compila imágenes, aplica Terraform y migra (un comando)
 infra/              Terraform: bootstrap/ (estado local) y main/ (estado en GCS)
 docs/               Documentación y registro de decisiones
 ```

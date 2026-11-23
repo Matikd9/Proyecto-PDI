@@ -1,6 +1,10 @@
+locals {
+  dominios = concat(var.dominios_web, [trimprefix(local.url_web, "https://")])
+}
+
 # Identity Platform: registro e inicio de sesión con correo y contraseña (gratis bajo 50.000 MAU).
 resource "google_identity_platform_config" "auth" {
-  authorized_domains = var.dominios_web
+  authorized_domains = local.dominios
   sign_in {
     allow_duplicate_emails = false
     email {
@@ -20,7 +24,7 @@ resource "google_apikeys_key" "web" {
     api_targets { service = "identitytoolkit.googleapis.com" }
     api_targets { service = "securetoken.googleapis.com" }
     browser_key_restrictions {
-      allowed_referrers = flatten([for d in var.dominios_web : ["http://${d}:*/*", "https://${d}/*"]])
+      allowed_referrers = flatten([for d in local.dominios : ["http://${d}:*/*", "https://${d}/*"]])
     }
   }
   depends_on = [google_project_service.apis]

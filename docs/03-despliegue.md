@@ -3,8 +3,8 @@
 Procedimiento para replicar la infraestructura en un proyecto propio. Los comandos son para PowerShell.
 En PowerShell, los argumentos `-var-file=...` y `-out=...` de Terraform **deben ir entre comillas**.
 
-> Estado: los pasos 1 a 4 están implementados y probados (23-11-2026). Las imágenes, la red, Cloud SQL y
-> Cloud Run se agregarán en T8.
+> Estado: todos los pasos están implementados y probados en `lab3-pdi-vpm` (23-11-2026).
+> URL de ejemplo: **https://web-636986210007.southamerica-west1.run.app**
 
 ## Requisitos
 
@@ -54,34 +54,75 @@ Resultado esperado: 13 recursos creados.
 | `registry` | `southamerica-west1-docker.pkg.dev/lab3-pdi-vpm/imagenes` |
 | `build_service_account` | `sa-build@lab3-pdi-vpm.iam.gserviceaccount.com` |
 
-## 4. Infraestructura principal (estado remoto en GCS)
+## 4. Imágenes, infraestructura principal y migración (un comando)
 
 ```powershell
-cd ../main
-Copy-Item ../envs/dev.tfvars.example ../envs/dev.tfvars   # editar project_id si corresponde
-terraform init "-backend-config=bucket=lab3-pdi-vpm-tfstate"
-terraform apply "-var-file=../envs/dev.tfvars"
+Copy-Item infra/envs/dev.tfvars.example infra/envs/dev.tfvars   # editar project_id si corresponde
+./scripts/deploy.ps1                                            # o: ./scripts/deploy.ps1 -ProjectId <id>
 ```
 
-Con lo implementado hasta ahora crea 18 recursos: las APIs, el bucket privado de documentos, las cuentas de
-servicio `sa-api` y `sa-web` con sus roles, Identity Platform (correo y contraseña) y la API key del portal,
-restringida a las APIs de autenticación y a los dominios de `dominios_web`.
+El script hace tres cosas:
 
-**Comprobaciones realizadas:**
+1. **Compila** las imágenes `api`, `web` y `notificaciones` con Cloud Build (región Santiago, cuenta `sa-build`)
+   y las publica en Artifact Registry con la etiqueta = SHA corto de git.
+2. **Aplica** `infra/main` con esa etiqueta (estado remoto en `<project_id>-tfstate`). La primera vez crea 45
+   recursos y tarda ~8 minutos (Cloud SQL ~5 min).
+3. **Migra** la base de datos ejecutando el Cloud Run Job `migrate`.
+
+Al final muestra la URL del portal. Equivalente manual:
+
+```powershell
+gcloud builds submit app/api --config cloudbuild.yaml --region southamerica-west1 --substitutions "_IMAGEN=southamerica-west1-docker.pkg.dev/lab3-pdi-vpm/imagenes/api:<tag>" --service-account projects/lab3-pdi-vpm/serviceAccounts/sa-build@lab3-pdi-vpm.iam.gserviceaccount.com --gcs-source-staging-dir gs://lab3-pdi-vpm-build/fuente
+#   (repetir con app/web y app/notificaciones)
+cd infra/main
+terraform init "-backend-config=bucket=lab3-pdi-vpm-tfstate"
+terraform apply "-var-file=../envs/dev.tfvars" "-var=image_tag=<tag>"
+gcloud run jobs execute migrate --region southamerica-west1 --wait
+```
+
+### Qué crea `infra/main`
+
+| Archivo | Recursos |
+|---|---|
+| `apis.tf` | APIs de Cloud Run, Cloud SQL, Compute, Service Networking, Secret Manager, Pub/Sub, Identity Toolkit, API Keys y Logging |
+| `red.tf` | VPC `vpc-pdi-dev`, subred `snet-negocio` 10.10.2.0/24, rango y conexión de Private Services Access |
+| `sql.tf` | Cloud SQL PostgreSQL 16, edición Enterprise, `db-f1-micro`, solo IP privada y TLS obligatorio; base y usuario `tramites` |
+| `secretos.tf` | Clave aleatoria de la base de datos en Secret Manager (réplica en Santiago), legible solo por `sa-api` |
+| `storage.tf` | Bucket privado de documentos |
+| `pubsub.tf` | Tema `solicitud-eventos` y suscripción push autenticada (OIDC) hacia notificaciones |
+| `run.tf` | Servicios `api` (Direct VPC egress), `web` y `notificaciones` (ingreso interno), y Jobs `migrate` y `bootstrap-admin` |
+| `iam.tf` | Cuentas `sa-api`, `sa-web`, `sa-notificaciones` y `sa-pubsub-push`, con roles sobre el recurso concreto |
+| `identidad.tf` | Identity Platform (correo y contraseña) y API key restringida a autenticación y al dominio del portal |
+
+## 5. Primer administrador
+
+1. Registrarse en el portal con el correo que será administrador.
+2. Promover la cuenta con el job (solo puede hacerlo alguien con permisos IAM en el proyecto):
+
+```powershell
+gcloud run jobs execute bootstrap-admin --region southamerica-west1 --args "bootstrap-admin,--email,<correo>" --wait
+```
+
+3. Desde **Administración**, ese usuario puede asignar el rol de funcionario a otras cuentas.
+
+## Comprobaciones realizadas
 
 - Un segundo `terraform plan` en `bootstrap` y en `main` responde "No changes".
-- Se registró una cuenta ficticia con la API key enviando como referer `localhost`, y luego se eliminó.
-- Con un referer de otro dominio, la API key responde 403.
+- Flujo completo en la URL pública (ver `docs/04-pruebas.md`).
 
-## Costos de lo creado hasta ahora
+## Costos
 
-Ninguno de estos recursos tiene costo fijo. Los buckets vacíos, el registro sin imágenes, las APIs, las
-cuentas de servicio e Identity Platform (bajo 50.000 usuarios activos al mes) cuestan ≈ USD 0.
+Ver `docs/05-costos.md`. Lo único con costo fijo es Cloud SQL: ≈ USD 0,44/día encendido. Para pausarlo:
+
+```powershell
+cd infra/main
+terraform apply "-var-file=../envs/dev.tfvars" "-var=image_tag=<tag>" "-var=sql_activa=NEVER"
+```
 
 ## Eliminar todo
 
 ```powershell
-cd infra/main;      terraform destroy "-var-file=../envs/dev.tfvars"
+cd infra/main;      terraform destroy "-var-file=../envs/dev.tfvars" "-var=image_tag=<tag>"
 cd ../bootstrap;    terraform destroy "-var=project_id=lab3-pdi-vpm"
 ```
 

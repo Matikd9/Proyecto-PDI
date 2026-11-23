@@ -1,3 +1,6 @@
+# Cloud Run expone dos URLs por servicio; CORS y la API key están configurados para la determinista.
+output "url_portal" { value = local.url_web }
+output "url_api" { value = local.url_api }
 output "documentos_bucket" { value = google_storage_bucket.documentos.name }
 output "sa_api" { value = google_service_account.api.email }
 output "sa_web" { value = google_service_account.web.email }

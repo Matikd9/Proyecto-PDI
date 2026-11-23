@@ -1,0 +1,9 @@
+# Construye una imagen y la publica en Artifact Registry. Se usa una vez por servicio:
+#   gcloud builds submit app/api --config cloudbuild.yaml --substitutions _IMAGEN=<registro>/api:<tag> ...
+# (ver scripts/deploy.ps1)
+steps:
+  - name: gcr.io/cloud-builders/docker
+    args: ["build", "-t", "${_IMAGEN}", "."]
+images: ["${_IMAGEN}"]
+options:
+  logging: CLOUD_LOGGING_ONLY # la cuenta sa-build escribe logs, no necesita bucket de logs

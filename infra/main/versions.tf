@@ -2,6 +2,7 @@ terraform {
   required_version = ">= 1.6"
   required_providers {
     google = { source = "hashicorp/google", version = "~> 7.0" }
+    random = { source = "hashicorp/random", version = "~> 3.6" }
   }
   # El bucket se indica al inicializar: terraform init -backend-config="bucket=<project_id>-tfstate"
   backend "gcs" {

@@ -62,6 +62,28 @@ $env:TEST_GCS_BUCKET="lab3-pdi-vpm-documentos"; pytest tests/test_gcs_integracio
 Acceso al bucket: `sa-api` (`roles/storage.objectUser`) y los roles heredados por defecto del proyecto
 (dueños, editores y lectores). Los objetos de prueba se eliminaron.
 
+## Despliegue en GCP: flujo de punta a punta (23-11-2026)
+
+URL: https://web-636986210007.southamerica-west1.run.app · imágenes `1625e74`.
+
+| Paso | Componente probado | Resultado |
+|---|---|---|
+| Cloud Run `api` arranca | Sonda `/api/v1/health` (`SELECT 1` por IP privada y TLS a Cloud SQL) | ✅ |
+| Job `migrate` | Alembic en Cloud SQL; el catálogo responde con 2 trámites | ✅ |
+| El ciudadano se registra desde el portal | Identity Platform + `GET /me` (nace `ciudadano`) | ✅ |
+| Crea la solicitud, adjunta un PDF y envía | Cloud SQL + Cloud Storage (`solicitudes/{uuid}/{uuid}`) | ✅ Ve "En revisión" |
+| Job `bootstrap-admin --email admin-demo@ficticio.cl` | Cloud Run Job con IAM | ✅ |
+| El admin promueve a `funcionario-demo@ficticio.cl` | `PATCH /admin/usuarios/{id}` (comprueba revocación) | ✅ |
+| El funcionario descarga el documento y aprueba | Lectura desde GCS + transición a `EMITIDA` | ✅ |
+| Notificaciones | Pub/Sub → push OIDC → Cloud Run interno → Cloud Logging: "recibida", "en revisión" y "emitida" | ✅ |
+| El ciudadano descarga el certificado | PDF de 2,5 KB | ✅ |
+| Verificación pública del código | `/verificar/<código>` → válido, titular enmascarado | ✅ |
+| Llamar a `notificaciones` desde internet | Ingreso interno | ✅ 404 |
+| `terraform plan` después del despliegue | Sin drift | ✅ "No changes" |
+
+Cuentas ficticias de demostración (Identity Platform): `ciudadano-demo@ficticio.cl`,
+`funcionario-demo@ficticio.cl` y `admin-demo@ficticio.cl`. La contraseña no se publica en el repositorio.
+
 ## Datos ficticios para la validación simulada
 
 | RUT | Resultado |
