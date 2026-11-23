@@ -84,6 +84,24 @@ URL: https://web-636986210007.southamerica-west1.run.app · imágenes `1625e74`.
 Cuentas ficticias de demostración (Identity Platform): `ciudadano-demo@ficticio.cl`,
 `funcionario-demo@ficticio.cl` y `admin-demo@ficticio.cl`. La contraseña no se publica en el repositorio.
 
+## Reproducibilidad: destruir y recrear (T11, 23-11-2026)
+
+Se destruyó `infra/main` por completo y se recreó siguiendo solo `docs/03-despliegue.md`.
+
+| Paso | Resultado |
+|---|---|
+| `terraform destroy` | Cloud SQL y todo lo con costo se eliminó en el primer intento. La subred `snet-negocio` se liberó ~1 h 30 min después (19 reintentos) |
+| Primer `./scripts/deploy.ps1` | ❌ Falló al final: Identity Platform no se puede desactivar y ya existía. Se agregó un bloque `import` (D-12) |
+| Segundo `./scripts/deploy.ps1` (commit `338b25d`) | ✅ Imágenes, 45 recursos, migración. Nueva instancia `pg-tramites-ffcd` |
+| Health, catálogo, portal | ✅ `{"estado":"ok"}`, 2 trámites, portal 200; `notificaciones` desde internet → 404 |
+| Usuarios | Las cuentas de Identity Platform se conservan; la base es nueva, así que entran como `ciudadano` en su primer `/me` |
+| Job `bootstrap-admin` + `PATCH` del admin | ✅ admin → `administrador`, funcionario → `funcionario`; un ciudadano en `/admin` → 403 |
+| Flujo vía API (`12345678-5`) | ✅ borrador → documento en GCS (`solicitudes/{uuid}/{uuid}`) → enviada (el ciudadano ve `EN_REVISION`, el backoffice `PREAPROBADA`) → `EMITIDA` → PDF de 2,5 KB |
+| Notificaciones | ✅ 3 registros en Cloud Logging (recibida, en revisión, emitida) |
+| Verificación pública | ✅ código del PDF → `valido: true`, titular enmascarado; código inventado → `valido: false` |
+| `terraform plan` | ✅ "No changes" |
+| Pausa de Cloud SQL | ✅ `sql_activa=NEVER` → instancia `STOPPED` |
+
 ## Datos ficticios para la validación simulada
 
 | RUT | Resultado |
