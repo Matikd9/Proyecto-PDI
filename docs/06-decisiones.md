@@ -22,6 +22,9 @@ Cada decisión indica el contexto, lo decidido y su impacto. Se actualiza a medi
 - **Contexto:** se exige que los roles privilegiados no puedan asignarse desde el frontend ni por registro público.
 - **Decisión:** Identity Platform solo autentica (quién es). El rol está en `usuarios.rol` y la API lo consulta en cada petición. Todo usuario nuevo nace `ciudadano`. El primer administrador se crea con el Cloud Run Job `bootstrap-admin` (protegido por IAM de GCP); los siguientes, solo vía `PATCH /admin/usuarios/{id}`.
 - **Impacto:** un cambio o revocación de rol tiene efecto inmediato; no depende de custom claims del token.
+- **Revocación de sesiones:** las rutas `/admin/*` comprueban en Identity Platform si el token fue revocado
+  (probado: 401 tras revocar). El resto de las rutas no lo hace, para no consultar Identity Platform en cada
+  petición; para bloquear a alguien de inmediato en toda la API se usa `activo = false`.
 
 ## D-05 · Acceso a recursos ajenos devuelve 404
 - Un ciudadano que pide una solicitud o documento ajeno recibe 404 (no 403), para no revelar su existencia. Los identificadores son UUID.
