@@ -7,7 +7,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 Laboratorio 3 de Arquitectura Cloud (UAI, Grupo VPM): prueba de concepto de una plataforma para solicitar,
 validar y emitir dos certificados migratorios de la PDI (Certificado de Viajes y Vigencia de Permanencia
 Definitiva), desplegada en GCP `southamerica-west1` con Terraform. Es un trabajo académico: **no es un servicio
-oficial de la PDI**, se usan solo datos ficticios y no se debe usar el logotipo de la PDI. Las integraciones
+oficial de la PDI**, se usan solo datos ficticios y no se debe usar el logotipo de la PDI
+(el portal usa la marca ficticia "DPI", en texto con tipografía propia; ver D-14). Las integraciones
 institucionales (Clave Única, Registro Civil, Migraciones, Interpol) están **simuladas**, nunca se fingen reales.
 
 Todo (código, identificadores, mensajes, documentación) está en español.

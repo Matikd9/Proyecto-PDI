@@ -80,5 +80,14 @@ Cada decisión indica el contexto, lo decidido y su impacto. Se actualiza a medi
   porque no existe un permiso por modelo.
 - **Costo:** USD 0,25 por millón de tokens de entrada y USD 0,75 por millón de salida; sin costo fijo.
 
+## D-14 · Marca ficticia "DPI" y botón de ClaveÚnica
+- **Marca:** el encabezado muestra "DPI" en amarillo sobre azul, con la tipografía Alfa Slab One (Google
+  Fonts). Por decisión del grupo, el nombre se altera a propósito para que se entienda que el diseño está
+  pensado para la PDI sin usar su nombre ni su logotipo oficial. El aviso amarillo permanente de prueba de
+  concepto académica se mantiene en todas las páginas.
+- **ClaveÚnica:** el botón usa el formato del kit oficial "Botón Oficial de ClaveÚnica" v2.0 (colores,
+  Roboto, ícono `cu-blanco.svg`), pero sigue **deshabilitado** y rotulado como simulado: no hay integración
+  real con ClaveÚnica.
+
 ## D-10 · Modo de autenticación de desarrollo
 - Para desarrollo y pruebas locales existe `AUTH_MODE=dev` (token `dev|uid|email`). La aplicación **se niega a arrancar** en ese modo si detecta que corre en Cloud Run (`K_SERVICE`), por lo que no puede activarse en la nube por error.

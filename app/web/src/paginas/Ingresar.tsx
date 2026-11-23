@@ -86,9 +86,14 @@ export default function Ingresar() {
           </button>
         </p>
         <hr style={{ border: 0, borderTop: "1px solid var(--borde)", margin: "16px 0" }} />
-        <button className="boton boton--secundario" disabled style={{ width: "100%" }} title="No disponible en la prueba de concepto">
-          Ingresar con Clave Única (no disponible en el prototipo)
+        <button className="btn-cu btn-m btn-color-estandar rounded-full btn-fw" type="button" disabled
+          aria-label="Iniciar sesión con ClaveÚnica (simulado, no disponible en el prototipo)">
+          <span className="cl-claveunica" aria-hidden="true"></span>
+          <span className="texto" aria-hidden="true">Iniciar sesión</span>
         </button>
+        <p className="suave" style={{ fontSize: 12, textAlign: "center", margin: "6px 0 12px" }}>
+          ClaveÚnica está simulada: no está integrada en el prototipo.
+        </p>
         <p className="suave" style={{ fontSize: 12, marginBottom: 0 }}>
           Las cuentas nuevas tienen rol ciudadano. Los roles de funcionario y administrador los asigna un administrador.
         </p>

@@ -25,8 +25,8 @@ export function Layout() {
       </div>
       <header className="encabezado">
         <div className="contenedor encabezado__fila">
-          <Link to="/" className="marca" aria-label="Inicio">
-            <span className="marca__nombre">Trámites Migratorios</span>
+          <Link to="/" className="marca" aria-label="DPI, inicio">
+            <span className="logo-dpi" aria-hidden="true">DPI</span>
             <span className="marca__sub">Prototipo · Arquitectura Cloud</span>
           </Link>
           <div className="utilidades">
