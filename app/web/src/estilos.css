@@ -66,7 +66,14 @@ main { flex: 1; padding: 28px 0 48px; }
 
 /* ---------- Pie ---------- */
 .pie { background: var(--azul); color: rgba(255,255,255,.85); font-size: 13px; padding: 22px 0; }
-.pie strong { color: var(--blanco); }
+.pie strong { color: var(--blanco); display: block; margin-bottom: 8px; }
+.pie__columnas { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 24px; }
+.pie__columnas p { margin: 8px 0 0; line-height: 1.5; }
+.pie nav { display: flex; flex-direction: column; gap: 6px; }
+.pie a { color: rgba(255,255,255,.85); text-decoration: none; }
+.pie a:hover { color: var(--amarillo); text-decoration: underline; }
+.pie__legal { border-top: 1px solid rgba(255,255,255,.15); margin-top: 20px; padding-top: 14px; font-size: 12px; }
+.logo-dpi--chico { display: inline-block; font-size: 22px; padding: 4px 10px 2px; }
 
 /* ---------- Bloques ---------- */
 .titulo-seccion { font: 700 20px var(--titulo); color: var(--azul); margin: 0 0 14px; }

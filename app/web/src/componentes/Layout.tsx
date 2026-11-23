@@ -51,11 +51,28 @@ export function Layout() {
       </header>
       <main><div className="contenedor"><Outlet /></div></main>
       <footer className="pie">
-        <div className="contenedor">
-          <strong>Laboratorio 3 · Arquitectura Cloud · Universidad Adolfo Ibáñez</strong><br />
-          Vicente Vásquez · Matías Medina · Pascal Jorquera — Profesor Nicolás Riderelli.<br />
-          Prototipo sin validez legal. Las consultas a Registro Civil, Migraciones e Interpol están simuladas.
+        <div className="contenedor pie__columnas">
+          <div>
+            <span className="logo-dpi logo-dpi--chico" aria-hidden="true">DPI</span>
+            <p>Trámites migratorios en línea: solicite, siga y descargue sus certificados sin ir a una oficina.</p>
+          </div>
+          <nav aria-label="Trámites en línea">
+            <strong>Trámites en línea</strong>
+            <Link to="/solicitudes/nueva?tramite=CERT_VIAJES">Certificado de Viajes</Link>
+            <Link to="/solicitudes/nueva?tramite=VIGENCIA_PD">Vigencia de Permanencia Definitiva</Link>
+            <Link to="/verificar">Verificar un certificado</Link>
+          </nav>
+          <nav aria-label="Su cuenta">
+            <strong>Su cuenta</strong>
+            {usuario ? <Link to="/">Ir a mi inicio</Link> : <Link to="/ingresar">Ingresar o crear una cuenta</Link>}
+          </nav>
+          <div>
+            <strong>Privacidad y seguridad</strong>
+            <p>Sus datos y documentos se usan solo para tramitar su solicitud, conforme a la Ley N° 19.628.
+              Nunca le pediremos su contraseña por correo ni por teléfono.</p>
+          </div>
         </div>
+        <div className="contenedor pie__legal">© {new Date().getFullYear()} DPI · Todos los trámites de este sitio son gratuitos.</div>
       </footer>
     </div>
   );
