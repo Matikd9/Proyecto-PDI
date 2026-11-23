@@ -2,9 +2,7 @@ import { useState, type FormEvent } from "react";
 import { Navigate, useLocation } from "react-router-dom";
 import { useSesion } from "../lib/auth";
 import { config } from "../lib/config";
-import { Error } from "../componentes/Layout";
-
-const INICIO_POR_ROL = { ciudadano: "/mis-solicitudes", funcionario: "/backoffice", administrador: "/admin" };
+import { Error, INICIO_POR_ROL } from "../componentes/Layout";
 
 // Traduce los códigos de error de Identity Platform a mensajes comprensibles.
 function traducir(e: any): string {

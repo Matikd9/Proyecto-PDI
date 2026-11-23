@@ -78,13 +78,16 @@ export function Layout() {
   );
 }
 
+export const INICIO_POR_ROL: Record<Rol, string> = { ciudadano: "/mis-solicitudes", funcionario: "/backoffice", administrador: "/admin" };
+
 /** Exige sesión y rol. El backend vuelve a validar todo; esto es solo navegación. */
 export function Protegida({ rol, children }: { rol: Rol; children: ReactNode }) {
   const { usuario, cargando } = useSesion();
   const { pathname, search } = useLocation();
   if (cargando) return <Cargando />;
   if (!usuario) return <Navigate to="/ingresar" replace state={{ desde: pathname + search }} />;
-  if (usuario.rol !== rol) return <div className="mensaje mensaje--error">No tiene permisos para ver esta página.</div>;
+  // Rol equivocado (p. ej. el admin entra por "Ingreso de funcionarios"): se lleva a su propio inicio.
+  if (usuario.rol !== rol) return <Navigate to={INICIO_POR_ROL[usuario.rol]} replace />;
   return <>{children}</>;
 }
 
