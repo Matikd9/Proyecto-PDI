@@ -60,6 +60,8 @@ Cada decisión indica el contexto, lo decidido y su impacto. Se actualiza a medi
   - `deletion_policy = "ABANDON"` en la base y el usuario de Cloud SQL: se eliminan con la instancia, y así
     `destroy` funciona aunque la instancia esté pausada.
   - La subred de Direct VPC egress tarda en liberarse: se documenta que hay que reintentar `destroy`.
+  - Identity Platform no se puede desactivar: `destroy` solo lo quita del estado (los usuarios registrados
+    se conservan). Un bloque `import` en `identidad.tf` adopta la configuración existente al recrear.
 
 ## D-10 · Modo de autenticación de desarrollo
 - Para desarrollo y pruebas locales existe `AUTH_MODE=dev` (token `dev|uid|email`). La aplicación **se niega a arrancar** en ese modo si detecta que corre en Cloud Run (`K_SERVICE`), por lo que no puede activarse en la nube por error.

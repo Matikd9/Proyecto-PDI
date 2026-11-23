@@ -2,6 +2,12 @@ locals {
   dominios = concat(var.dominios_web, [trimprefix(local.url_web, "https://")])
 }
 
+# Identity Platform no se puede desactivar: destroy solo lo quita del estado. Al recrear, se adopta la existente.
+import {
+  to = google_identity_platform_config.auth
+  id = "projects/${var.project_id}/config"
+}
+
 # Identity Platform: registro e inicio de sesión con correo y contraseña (gratis bajo 50.000 MAU).
 resource "google_identity_platform_config" "auth" {
   authorized_domains = local.dominios
