@@ -15,6 +15,7 @@ de Permanencia Definitiva**, desplegada en Google Cloud (`southamerica-west1`) m
 | API (FastAPI) | ✅ Implementada · 42 pruebas automáticas pasan (SQLite y PostgreSQL 16) |
 | Frontend (React) | ✅ Implementado · flujo completo probado en navegador contra la API local |
 | Autenticación real (Identity Platform) | ✅ Registro, login, roles y revocación probados contra GCP (ver `docs/04-pruebas.md`) |
+| Documentos en Cloud Storage | ✅ Bucket privado probado (subida, descarga, no sobrescritura, acceso anónimo bloqueado) |
 | Infraestructura (Terraform) | 🟡 Bootstrap y base aplicados en `lab3-pdi-vpm` (ver `docs/03-despliegue.md`); faltan red, Cloud SQL y Cloud Run |
 | Despliegue en GCP | ⏳ Pendiente |
 

@@ -41,6 +41,27 @@ Entorno: la API en el puerto 8090 con `AUTH_MODE=firebase` y el portal (misma im
 
 Las cuentas de prueba se eliminaron de Identity Platform al terminar.
 
+## Cloud Storage real (23-11-2026)
+
+Prueba de integración `app/api/tests/test_gcs_integracion.py`, contra el bucket `lab3-pdi-vpm-documentos`.
+Se omite en la suite normal; para ejecutarla:
+
+```powershell
+cd app/api
+$env:TEST_GCS_BUCKET="lab3-pdi-vpm-documentos"; pytest tests/test_gcs_integracion.py
+```
+
+| Prueba | Resultado |
+|---|---|
+| Guardar, leer y eliminar un objeto; el tipo de contenido se conserva | ✅ |
+| Intentar sobrescribir un documento existente | ✅ Rechazado (`if_generation_match=0`) |
+| Flujo por la API: el ciudadano sube, el documento queda en `solicitudes/{uuid}/{uuid}`, el funcionario lo descarga, otra cuenta recibe 404 | ✅ |
+| Lectura anónima por `https://storage.googleapis.com/...` | ✅ 403 |
+| Otorgar `allUsers` sobre el bucket (incluso como dueño del proyecto) | ✅ Rechazado con 412 por la prevención de acceso público forzada |
+
+Acceso al bucket: `sa-api` (`roles/storage.objectUser`) y los roles heredados por defecto del proyecto
+(dueños, editores y lectores). Los objetos de prueba se eliminaron.
+
 ## Datos ficticios para la validación simulada
 
 | RUT | Resultado |
