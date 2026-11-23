@@ -15,6 +15,7 @@ Precios de lista en `southamerica-west1` (Santiago), consultados en la página o
 | Artifact Registry (~1 GB de imágenes) | 0,5 GB gratis, luego ~USD 0,10/GB | ≈ 0,10 | ≈ 0,10 | Mínimo |
 | Cloud Build | 2.500 min/mes gratis | 0 | 0 | No |
 | Secret Manager, Pub/Sub, Cloud Logging, Identity Platform | niveles gratuitos | 0 | 0 | No |
+| Gemini 3.1 Flash-Lite (endpoint global, D-13) | USD 0,25 / 0,75 por millón de tokens (entrada / salida) | ≈ USD 0,0002 por lectura (medido: 697 tokens de entrada + 51 de salida con un PDF de una página) | 0 | No |
 | Cloud Storage (documentos, estado, fuente de builds) | < 1 GB | < 0,05 | < 0,05 | Mínimo |
 | **Total** | | **≈ USD 13,3/mes** (≈ USD 0,44/día) | **≈ USD 2,5/mes** | |
 

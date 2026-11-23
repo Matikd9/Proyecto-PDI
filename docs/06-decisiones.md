@@ -63,5 +63,22 @@ Cada decisión indica el contexto, lo decidido y su impacto. Se actualiza a medi
   - Identity Platform no se puede desactivar: `destroy` solo lo quita del estado (los usuarios registrados
     se conservan). Un bloque `import` en `identidad.tf` adopta la configuración existente al recrear.
 
+## D-13 · Lectura del documento de identidad con Gemini (T10)
+- **Contexto:** la arquitectura del Lab 2 incluye Gemini para leer documentos. Es la única integración
+  **real** de IA; las demás siguen simuladas.
+- **Decisión:** al enviar una solicitud, Gemini 3.1 Flash-Lite (Vertex AI) lee el documento de identidad
+  adjunto y extrae el número y el nombre. Si el número coincide con el formulario, la regla
+  `LECTURA_DOCUMENTO` queda en OK. Si no coincide, es ilegible o Gemini falla, queda en ALERTA y la solicitud
+  va a revisión humana sin motivo visible. **Nunca rechaza ni observa** (regla del Lab 1). Se activa con
+  `GEMINI_MODELO` (variable `gemini_modelo` de Terraform); si está vacía, la regla no se ejecuta.
+- **Región:** Gemini no está disponible en `southamerica-west1`, así que se usa el endpoint `global`: el
+  documento se procesa fuera de Chile. Se acepta porque todos los datos son ficticios; con datos reales
+  habría que evaluarlo frente a la Ley 19.628.
+- **Riesgos:** un documento podría contener texto que intente manipular al modelo (*prompt injection*). Por
+  eso Gemini solo devuelve campos estructurados, la comparación la hace el código y un OK de Gemini no
+  salta ninguna otra regla ni la revisión del funcionario. El rol `aiplatform.user` es a nivel de proyecto
+  porque no existe un permiso por modelo.
+- **Costo:** USD 0,25 por millón de tokens de entrada y USD 0,75 por millón de salida; sin costo fijo.
+
 ## D-10 · Modo de autenticación de desarrollo
 - Para desarrollo y pruebas locales existe `AUTH_MODE=dev` (token `dev|uid|email`). La aplicación **se niega a arrancar** en ese modo si detecta que corre en Cloud Run (`K_SERVICE`), por lo que no puede activarse en la nube por error.

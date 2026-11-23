@@ -102,6 +102,18 @@ Se destruyó `infra/main` por completo y se recreó siguiendo solo `docs/03-desp
 | `terraform plan` | ✅ "No changes" |
 | Pausa de Cloud SQL | ✅ `sql_activa=NEVER` → instancia `STOPPED` |
 
+## Lectura del documento con Gemini (T10, 23-11-2026)
+
+Documento ficticio: un PDF de una página generado con reportlab, con "RUN: 12.345.678-5" y "ANA PRUEBA FICTICIA".
+
+| Prueba | Resultado |
+|---|---|
+| Pruebas automáticas (`test_lectura_documentos.py`, Gemini simulado) | ✅ 5 casos: desactivada por defecto, coincide, número distinto, ilegible y error de Vertex AI |
+| Llamada real desde local (`gemini-3.1-flash-lite`, endpoint global) | ✅ `numero_documento='12.345.678-5'`, `nombre_completo='ANA PRUEBA FICTICIA'`; 697 + 51 tokens |
+| Primer intento en GCP justo después del despliegue | ❌ `PERMISSION_DENIED` (el rol `aiplatform.user` aún no se propagaba). Unos minutos después funcionó sin cambios |
+| GCP, formulario con el mismo RUT | ✅ `LECTURA_DOCUMENTO=OK`, "Coincide: ANA PRUEBA FICTICIA" |
+| GCP, formulario con otro RUT (`22333444-K`) | ✅ `ALERTA` → `EN_REVISION`; el ciudadano no ve el motivo, el funcionario sí: "El documento dice 12.345.678-5; el formulario, 22333444K" |
+
 ## Datos ficticios para la validación simulada
 
 | RUT | Resultado |
