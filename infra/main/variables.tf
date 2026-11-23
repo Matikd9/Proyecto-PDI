@@ -28,3 +28,9 @@ variable "dominios_web" {
   description = "Dominios desde los que el portal puede usar Identity Platform y su API key."
   default     = ["localhost"]
 }
+
+variable "gemini_modelo" {
+  description = "Modelo de Gemini para leer el documento de identidad (vacío = desactivado). Usa el endpoint global."
+  type        = string
+  default     = "gemini-3.1-flash-lite"
+}

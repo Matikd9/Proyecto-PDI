@@ -23,6 +23,7 @@ resource "google_project_iam_member" "api" {
   for_each = toset([
     "roles/cloudsql.client",
     "roles/logging.logWriter",
+    "roles/aiplatform.user",     # Gemini; no hay rol a nivel de recurso para modelos de Google
     "roles/firebaseauth.viewer", # revocación de tokens y búsqueda por email (bootstrap-admin)
   ])
   project = var.project_id

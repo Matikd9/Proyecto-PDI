@@ -16,7 +16,8 @@ from app.modelos import (
     Solicitud,
     TipoArchivo,
 )
-from app.servicios import simuladores
+from app.config import get_settings
+from app.servicios import lectura_documentos, simuladores
 
 _ALFABETO = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"  # sin 0/O ni 1/I para evitar confusiones
 
@@ -131,6 +132,10 @@ def validar(db: Session, sol: Solicitud) -> tuple[Estado, str | None]:
             r = simuladores.Respuesta(R.ALERTA, {"motivo": "Sin registros; respaldo adjunto a revisar"})
         resultados.append(_regla(db, sol, "MIGRACIONES_SIM", r))
     resultados.append(_regla(db, sol, "ALERTAS_INTERPOL_SIM", simuladores.alertas_interpol(tipo, numero)))
+
+    # 6. Lectura del documento de identidad con Gemini (opcional, real).
+    if get_settings().gemini_modelo:
+        resultados.append(_regla(db, sol, "LECTURA_DOCUMENTO", lectura_documentos.leer_identidad(sol)))
 
     if any(r.resultado == R.ALERTA for r in resultados):
         return Estado.EN_REVISION, None

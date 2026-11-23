@@ -13,7 +13,7 @@ const ACCIONES: Partial<Record<Estado, [Estado, string, string][]>> = {
 const REGLA: Record<string, string> = {
   DOCUMENTOS_OBLIGATORIOS: "Documentos obligatorios", DUPLICADOS: "Duplicados",
   REGISTRO_CIVIL_SIM: "Registro Civil (simulado)", MIGRACIONES_SIM: "Migraciones (simulado)",
-  ALERTAS_INTERPOL_SIM: "Alertas / Interpol (simulado)",
+  ALERTAS_INTERPOL_SIM: "Alertas / Interpol (simulado)", LECTURA_DOCUMENTO: "Lectura del documento (Gemini)",
 };
 
 export default function BackofficeDetalle() {

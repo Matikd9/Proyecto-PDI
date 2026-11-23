@@ -29,6 +29,8 @@ class Settings(BaseSettings):
     local_storage_dir: str = ".local-storage"
     events_mode: Literal["pubsub", "log"] = "pubsub"
     pubsub_topic: str = "solicitud-eventos"
+    gemini_modelo: str = ""  # vacío = lectura de documentos con Gemini desactivada
+    gemini_location: str = "global"  # Gemini no está disponible en southamerica-west1
 
     cors_origins: str = "http://localhost:5173"
     web_url: str = "http://localhost:5173"  # para el enlace de verificación del certificado

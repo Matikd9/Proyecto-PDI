@@ -7,19 +7,20 @@ locals {
   url_api = "https://api-${data.google_project.actual.number}.${var.region}.run.app"
 
   env_api = {
-    ENTORNO      = "dev"
-    AUTH_MODE    = "firebase"
-    GCP_PROJECT  = var.project_id
-    DB_HOST      = google_sql_database_instance.pg.private_ip_address
-    DB_NAME      = google_sql_database.tramites.name
-    DB_USER      = google_sql_user.app.name
-    DB_SSLMODE   = "require"
-    STORAGE_MODE = "gcs"
-    GCS_BUCKET   = google_storage_bucket.documentos.name
-    EVENTS_MODE  = "pubsub"
-    PUBSUB_TOPIC = google_pubsub_topic.eventos.name
-    CORS_ORIGINS = local.url_web
-    WEB_URL      = local.url_web
+    ENTORNO       = "dev"
+    AUTH_MODE     = "firebase"
+    GCP_PROJECT   = var.project_id
+    DB_HOST       = google_sql_database_instance.pg.private_ip_address
+    DB_NAME       = google_sql_database.tramites.name
+    DB_USER       = google_sql_user.app.name
+    DB_SSLMODE    = "require"
+    STORAGE_MODE  = "gcs"
+    GCS_BUCKET    = google_storage_bucket.documentos.name
+    EVENTS_MODE   = "pubsub"
+    PUBSUB_TOPIC  = google_pubsub_topic.eventos.name
+    CORS_ORIGINS  = local.url_web
+    WEB_URL       = local.url_web
+    GEMINI_MODELO = var.gemini_modelo
   }
 }
 

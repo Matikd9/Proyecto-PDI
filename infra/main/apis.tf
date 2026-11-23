@@ -9,6 +9,7 @@ resource "google_project_service" "apis" {
     "identitytoolkit.googleapis.com",
     "apikeys.googleapis.com",
     "logging.googleapis.com",
+    "aiplatform.googleapis.com", # Gemini (lectura de documentos)
   ])
   service            = each.value
   disable_on_destroy = false
