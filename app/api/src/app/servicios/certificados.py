@@ -1,14 +1,19 @@
 """Generación del PDF del certificado (al vuelo, no se almacena)."""
 from io import BytesIO
+from pathlib import Path
 
 from reportlab.lib.colors import HexColor
 from reportlab.lib.pagesizes import A4
+from reportlab.pdfbase import pdfmetrics
+from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.pdfgen import canvas
 
 from app.modelos import Certificado, Solicitud
 
 AZUL = HexColor("#00234C")
 AMARILLO = HexColor("#FFD100")
+# Misma tipografía del logo del portal (Alfa Slab One, licencia OFL en fuentes/OFL.txt).
+pdfmetrics.registerFont(TTFont("AlfaSlabOne", Path(__file__).parent.parent / "fuentes" / "AlfaSlabOne-Regular.ttf"))
 
 
 def enmascarar(nombres: str | None, apellidos: str | None) -> str:
@@ -25,11 +30,11 @@ def generar_pdf(sol: Solicitud, cert: Certificado, url_verificacion: str) -> byt
     c.rect(0, alto - 90, ancho, 90, fill=1, stroke=0)
     c.setFillColor(AMARILLO)
     c.rect(0, alto - 96, ancho, 6, fill=1, stroke=0)
+    c.setFont("AlfaSlabOne", 40)
+    c.drawString(40, alto - 62, "DPI")
     c.setFillColor(HexColor("#FFFFFF"))
-    c.setFont("Helvetica-Bold", 18)
-    c.drawString(40, alto - 50, "Trámites Migratorios · Prototipo")
     c.setFont("Helvetica", 10)
-    c.drawString(40, alto - 70, "Prueba de concepto académica — Grupo VPM, UAI")
+    c.drawString(40, alto - 80, "Trámites migratorios en línea · Prototipo")
 
     c.setFillColor(AZUL)
     c.setFont("Helvetica-Bold", 16)

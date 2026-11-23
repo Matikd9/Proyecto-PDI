@@ -43,7 +43,7 @@ main { flex: 1; padding: 28px 0 48px; }
 .encabezado__fila { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-top: 14px; padding-bottom: 10px; }
 .marca { color: var(--blanco); text-decoration: none; display: flex; flex-direction: column; }
 /* Marca ficticia "DPI": nombre cambiado a propósito porque es una PoC académica, no el logotipo oficial. */
-.logo-dpi { align-self: flex-start; background: #003a87; color: var(--amarillo); font: 400 34px/1 "Alfa Slab One", Georgia, serif; letter-spacing: 1px; padding: 6px 14px 4px; }
+.logo-dpi { align-self: flex-start; color: var(--amarillo); font: 400 38px/1 "Alfa Slab One", Georgia, serif; letter-spacing: 1px; }
 .marca__sub { font-size: 12px; opacity: .85; margin-top: 4px; }
 .utilidades { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
 .utilidades a, .utilidades button.enlace-claro { color: var(--blanco); font-size: 13px; text-decoration: none; }
@@ -73,7 +73,7 @@ main { flex: 1; padding: 28px 0 48px; }
 .pie a { color: rgba(255,255,255,.85); text-decoration: none; }
 .pie a:hover { color: var(--amarillo); text-decoration: underline; }
 .pie__legal { border-top: 1px solid rgba(255,255,255,.15); margin-top: 20px; padding-top: 14px; font-size: 12px; }
-.logo-dpi--chico { display: inline-block; font-size: 22px; padding: 4px 10px 2px; }
+.logo-dpi--chico { display: inline-block; font-size: 26px; }
 
 /* ---------- Bloques ---------- */
 .titulo-seccion { font: 700 20px var(--titulo); color: var(--azul); margin: 0 0 14px; }
