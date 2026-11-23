@@ -127,3 +127,9 @@ cd ../bootstrap;    terraform destroy "-var=project_id=lab3-pdi-vpm"
 ```
 
 O, de forma definitiva: `gcloud projects delete lab3-pdi-vpm`.
+
+**Al destruir `infra/main`, la subred puede tardar en liberarse.** Cloud Run reserva IPs en la subred para
+Direct VPC egress y Google las libera entre minutos y ~2 horas después de borrar los servicios. Mientras tanto
+`terraform destroy` falla con `resourceInUseByAnotherResource` en `snet-negocio`. Basta con volver a
+ejecutarlo más tarde: Cloud SQL y todo lo que tiene costo ya se habrá eliminado en el primer intento.
+En nuestra prueba (23-11-2026) la subred se liberó ~1 h 30 min después (19.º reintento, cada 5 minutos).

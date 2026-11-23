@@ -18,7 +18,7 @@ resource "google_identity_platform_config" "auth" {
 
 # API key del navegador: es pública por diseño; se limita a las APIs de autenticación y a los dominios del portal.
 resource "google_apikeys_key" "web" {
-  name         = "portal-web"
+  name         = "portal-web-${random_id.sufijo.hex}" # las keys borradas reservan su nombre 30 días
   display_name = "Portal web (Identity Platform)"
   restrictions {
     api_targets { service = "identitytoolkit.googleapis.com" }

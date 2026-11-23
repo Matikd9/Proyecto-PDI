@@ -1,7 +1,12 @@
 # Cloud SQL PostgreSQL 16. La edición ENTERPRISE es obligatoria: Enterprise Plus (por defecto en PG16+)
 # no admite db-f1-micro. Costo en Santiago: USD 0,0147/h + disco (ver docs/05-costos.md).
+# GCP reserva el nombre de una instancia borrada por días: el sufijo permite destruir y recrear.
+resource "random_id" "sufijo" {
+  byte_length = 2
+}
+
 resource "google_sql_database_instance" "pg" {
-  name                = "pg-tramites"
+  name                = "pg-tramites-${random_id.sufijo.hex}"
   database_version    = "POSTGRES_16"
   region              = var.region
   deletion_protection = false # PoC: permite terraform destroy
@@ -26,8 +31,9 @@ resource "google_sql_database_instance" "pg" {
 }
 
 resource "google_sql_database" "tramites" {
-  name     = "tramites"
-  instance = google_sql_database_instance.pg.name
+  name            = "tramites"
+  instance        = google_sql_database_instance.pg.name
+  deletion_policy = "ABANDON" # se borra con la instancia; así destroy funciona aunque esté pausada
 }
 
 resource "random_password" "db" {
@@ -36,7 +42,8 @@ resource "random_password" "db" {
 }
 
 resource "google_sql_user" "app" {
-  name     = "tramites"
-  instance = google_sql_database_instance.pg.name
-  password = random_password.db.result
+  name            = "tramites"
+  instance        = google_sql_database_instance.pg.name
+  password        = random_password.db.result
+  deletion_policy = "ABANDON"
 }

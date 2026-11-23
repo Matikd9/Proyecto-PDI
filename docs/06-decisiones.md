@@ -52,5 +52,14 @@ Cada decisión indica el contexto, lo decidido y su impacto. Se actualiza a medi
   `gcloud projects create <id>` → `gcloud billing projects link <id> --billing-account=<cuenta>` →
   `gcloud billing budgets create --billing-account=<cuenta> --budget-amount=25USD --filter-projects=projects/<id> --threshold-rule=percent=0.4 --threshold-rule=percent=0.8 --threshold-rule=percent=1.0`.
 
+## D-12 · Infraestructura destruible y recreable
+- **Contexto:** la prueba de reproducibilidad (destruir y recrear) mostró tres obstáculos de GCP.
+- **Decisiones:**
+  - Sufijo aleatorio (`random_id`) en el nombre de la instancia de Cloud SQL y de la API key, porque GCP
+    reserva por días o semanas los nombres de esos recursos después de borrarlos.
+  - `deletion_policy = "ABANDON"` en la base y el usuario de Cloud SQL: se eliminan con la instancia, y así
+    `destroy` funciona aunque la instancia esté pausada.
+  - La subred de Direct VPC egress tarda en liberarse: se documenta que hay que reintentar `destroy`.
+
 ## D-10 · Modo de autenticación de desarrollo
 - Para desarrollo y pruebas locales existe `AUTH_MODE=dev` (token `dev|uid|email`). La aplicación **se niega a arrancar** en ese modo si detecta que corre en Cloud Run (`K_SERVICE`), por lo que no puede activarse en la nube por error.
