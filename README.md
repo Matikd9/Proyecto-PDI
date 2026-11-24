@@ -1,7 +1,7 @@
-# Trámites Migratorios · Prototipo — Laboratorio 3 (Grupo VPM, UAI)
+# DPI · Trámites migratorios en línea — Laboratorio 3 (Grupo VPM, UAI)
 
 > **Prueba de concepto académica.** No es un servicio oficial de la Policía de Investigaciones de Chile.
-> Usa solo datos ficticios.
+> Usa solo datos ficticios. "DPI" es una marca ficticia, alterada a propósito (D-14).
 
 Integrantes: Vicente Vásquez · Matías Medina · Pascal Jorquera — Profesor: Nicolás Riderelli.
 
@@ -12,16 +12,20 @@ de Permanencia Definitiva**, desplegada en Google Cloud (`southamerica-west1`) m
 
 | Componente | Estado |
 |---|---|
-| API (FastAPI) | ✅ Implementada · 42 pruebas automáticas pasan (SQLite y PostgreSQL 16) |
+| API (FastAPI) | ✅ Implementada · 47 pruebas automáticas pasan (SQLite y PostgreSQL 16) |
 | Frontend (React) | ✅ Implementado · flujo completo probado en navegador contra la API local |
 | Autenticación real (Identity Platform) | ✅ Registro, login, roles y revocación probados contra GCP (ver `docs/04-pruebas.md`) |
 | Documentos en Cloud Storage | ✅ Bucket privado probado (subida, descarga, no sobrescritura, acceso anónimo bloqueado) |
 | Infraestructura (Terraform) | ✅ Aplicada en `lab3-pdi-vpm` sin drift (ver `docs/03-despliegue.md`) |
 | Despliegue en GCP | ✅ Flujo completo probado en la URL pública (ver `docs/04-pruebas.md`) |
+| Notificaciones (Pub/Sub) | ✅ Eventos de cada cambio de estado registrados como correo simulado en Cloud Logging |
+| Lectura de documentos con Gemini | ✅ Vertex AI (endpoint global) compara el documento con el formulario (D-13) |
+| Reproducibilidad | ✅ `destroy` completo y recreación desde la documentación (T11) |
 
 **URL de ejemplo:** https://web-636986210007.southamerica-west1.run.app
 (si Cloud SQL está pausado para ahorrar créditos, el portal carga pero no responde a operaciones con datos)
-| Despliegue en GCP | ⏳ Pendiente |
+
+**Informe final:** [`docs/00-informe-final.md`](docs/00-informe-final.md).
 
 ## Estructura
 

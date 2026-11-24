@@ -65,7 +65,7 @@ El script hace tres cosas:
 
 1. **Compila** las imágenes `api`, `web` y `notificaciones` con Cloud Build (región Santiago, cuenta `sa-build`)
    y las publica en Artifact Registry con la etiqueta = SHA corto de git.
-2. **Aplica** `infra/main` con esa etiqueta (estado remoto en `<project_id>-tfstate`). La primera vez crea 45
+2. **Aplica** `infra/main` con esa etiqueta (estado remoto en `<project_id>-tfstate`). La primera vez crea 46
    recursos y tarda ~8 minutos (Cloud SQL ~5 min).
 3. **Migra** la base de datos ejecutando el Cloud Run Job `migrate`.
 
@@ -84,14 +84,14 @@ gcloud run jobs execute migrate --region southamerica-west1 --wait
 
 | Archivo | Recursos |
 |---|---|
-| `apis.tf` | APIs de Cloud Run, Cloud SQL, Compute, Service Networking, Secret Manager, Pub/Sub, Identity Toolkit, API Keys y Logging |
+| `apis.tf` | APIs de Cloud Run, Cloud SQL, Compute, Service Networking, Secret Manager, Pub/Sub, Identity Toolkit, API Keys, Logging y Vertex AI (Gemini) |
 | `red.tf` | VPC `vpc-pdi-dev`, subred `snet-negocio` 10.10.2.0/24, rango y conexión de Private Services Access |
 | `sql.tf` | Cloud SQL PostgreSQL 16, edición Enterprise, `db-f1-micro`, solo IP privada y TLS obligatorio; base y usuario `tramites` |
 | `secretos.tf` | Clave aleatoria de la base de datos en Secret Manager (réplica en Santiago), legible solo por `sa-api` |
 | `storage.tf` | Bucket privado de documentos |
 | `pubsub.tf` | Tema `solicitud-eventos` y suscripción push autenticada (OIDC) hacia notificaciones |
 | `run.tf` | Servicios `api` (Direct VPC egress), `web` y `notificaciones` (ingreso interno), y Jobs `migrate` y `bootstrap-admin` |
-| `iam.tf` | Cuentas `sa-api`, `sa-web`, `sa-notificaciones` y `sa-pubsub-push`, con roles sobre el recurso concreto |
+| `iam.tf` | Cuentas `sa-api`, `sa-web`, `sa-notificaciones` y `sa-pubsub-push`, con roles sobre el recurso concreto (salvo `aiplatform.user`, que solo existe a nivel de proyecto) |
 | `identidad.tf` | Identity Platform (correo y contraseña) y API key restringida a autenticación y al dominio del portal |
 
 ## 5. Primer administrador

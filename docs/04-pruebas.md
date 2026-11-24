@@ -8,6 +8,7 @@ Registro de lo que se probó, cómo y con qué resultado. Solo se anota lo que e
 |---|---|---|
 | 23-11-2026 | SQLite en memoria | 42 pasan |
 | 23-11-2026 | PostgreSQL 16 (Docker) | 42 pasan |
+| 24-11-2026 | SQLite en memoria (con la lectura de documentos y el certificado con logo) | 47 pasan, 2 omitidas (integración con GCS, requieren bucket real) |
 
 Cubren roles y permisos (incluido 404 ante recursos ajenos), validación de archivos, máquina de estados,
 validación simulada, administración de usuarios, `bootstrap-admin` y el bloqueo del modo `dev` en Cloud Run.
