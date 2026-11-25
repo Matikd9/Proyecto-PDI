@@ -36,7 +36,6 @@ img { max-width: 100%; }
 main { flex: 1; padding: 28px 0 48px; }
 
 /* ---------- Aviso de prueba de concepto ---------- */
-.aviso-poc { background: var(--amarillo); color: var(--azul); font-size: 13px; font-weight: 600; text-align: center; padding: 6px 16px; }
 
 /* ---------- Encabezado ---------- */
 .encabezado { background: var(--azul); color: var(--blanco); border-bottom: 4px solid var(--amarillo); }

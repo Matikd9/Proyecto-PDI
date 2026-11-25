@@ -86,8 +86,10 @@ Cada decisión indica el contexto, lo decidido y su impacto. Se actualiza a medi
 ## D-14 · Marca ficticia "DPI" y botón de ClaveÚnica
 - **Marca:** el encabezado muestra "DPI" en amarillo sobre azul, con la tipografía Alfa Slab One (Google
   Fonts). Por decisión del grupo, el nombre se altera a propósito para que se entienda que el diseño está
-  pensado para la PDI sin usar su nombre ni su logotipo oficial. El aviso amarillo permanente de prueba de
-  concepto académica se mantiene en todas las páginas.
+  pensado para la PDI sin usar su nombre ni su logotipo oficial. El 25-11-2026 el grupo decidió quitar la franja
+  amarilla de aviso del encabezado. El carácter de prototipo sigue indicado bajo el logo ("Prototipo ·
+  Arquitectura Cloud"), en la verificación pública ("prototipo académico, sin validez legal") y en el
+  certificado PDF (marca de agua "DOCUMENTO FICTICIO" y leyenda de que no es oficial).
 - **ClaveÚnica:** el botón usa el formato del kit oficial "Botón Oficial de ClaveÚnica" v2.0 (colores,
   Roboto, ícono `cu-blanco.svg`), pero sigue **deshabilitado** y rotulado como simulado: no hay integración
   real con ClaveÚnica.

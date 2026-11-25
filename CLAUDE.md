@@ -155,5 +155,5 @@ corto → job `migrate`).
   balanceador y Cloud Armor **no se implementaron**: se evaluaron en T10 y se descartaron por costo
   (≈ USD 26/mes fijos).
 - **Estilo del frontend** (ya implementado): inspirado en pdichile.cl (azul `#00234C`, fondo `#EFEFEF`,
-  amarillo `#FFD100`, Oswald y Open Sans, botones píldora de 25px, tarjetas de esquinas rectas), con un aviso
-  amarillo permanente de prueba de concepto académica.
+  amarillo `#FFD100`, Oswald y Open Sans, botones píldora de 25px, tarjetas de esquinas rectas). La franja amarilla de aviso se
+  quitó por decisión del grupo (D-14); el carácter de prototipo queda bajo el logo, en la verificación y en el PDF.

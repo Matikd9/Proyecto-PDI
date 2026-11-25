@@ -20,9 +20,6 @@ export function Layout() {
 
   return (
     <div className="app">
-      <div className="aviso-poc" role="note">
-        Prueba de concepto académica — Grupo VPM, UAI. No es un servicio oficial de la PDI. Use solo datos ficticios.
-      </div>
       <header className="encabezado">
         <div className="contenedor encabezado__fila">
           <Link to="/" className="marca" aria-label="DPI, inicio">
