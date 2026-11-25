@@ -11,7 +11,8 @@ Registro de lo que se probó, cómo y con qué resultado. Solo se anota lo que e
 | 24-11-2026 | SQLite en memoria (con la lectura de documentos y el certificado con logo) | 47 pasan, 2 omitidas (integración con GCS, requieren bucket real) |
 
 Cubren roles y permisos (incluido 404 ante recursos ajenos), validación de archivos, máquina de estados,
-validación simulada, administración de usuarios, `bootstrap-admin` y el bloqueo del modo `dev` en Cloud Run.
+validación simulada, lectura del documento con Gemini (simulado), administración de usuarios, `bootstrap-admin`
+y el bloqueo del modo `dev` en Cloud Run.
 
 ## Flujo completo en navegador (local, modo `dev`, 23-11-2026)
 
@@ -114,6 +115,15 @@ Documento ficticio: un PDF de una página generado con reportlab, con "RUN: 12.3
 | Primer intento en GCP justo después del despliegue | ❌ `PERMISSION_DENIED` (el rol `aiplatform.user` aún no se propagaba). Unos minutos después funcionó sin cambios |
 | GCP, formulario con el mismo RUT | ✅ `LECTURA_DOCUMENTO=OK`, "Coincide: ANA PRUEBA FICTICIA" |
 | GCP, formulario con otro RUT (`22333444-K`) | ✅ `ALERTA` → `EN_REVISION`; el ciudadano no ve el motivo, el funcionario sí: "El documento dice 12.345.678-5; el formulario, 22333444K" |
+
+## Ajustes de interfaz y certificado (24-11-2026)
+
+| Prueba | Resultado |
+|---|---|
+| Marca DPI y botón de ClaveÚnica (deshabilitado) en la URL pública | ✅ Sin errores en la consola del navegador; se ve bien en escritorio y en móvil |
+| Admin que entra por "Ingreso de funcionarios" (local) | ✅ Redirige a `/admin` en vez de mostrar "No tiene permisos"; el funcionario llega a `/backoffice` |
+| Certificado PDF con el logo DPI, descargado desde GCP | ✅ 16,5 KB, con la fuente Alfa Slab One incrustada |
+| Documentos ficticios de `docs/demo/` leídos por Gemini (local) | ✅ Ambos números de RUT y nombres extraídos correctamente |
 
 ## Datos ficticios para la validación simulada
 

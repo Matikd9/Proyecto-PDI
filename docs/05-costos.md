@@ -23,6 +23,7 @@ Precios de lista en `southamerica-west1` (Santiago), consultados en la página o
 
 - Alerta de presupuesto de USD 25 con avisos al 40 %, 80 % y 100 % (D-11). **Solo notifica, no detiene el gasto.**
 - Cloud Run: mínimo 0 instancias y máximo 2 (1 para notificaciones).
+- `scripts/deploy.ps1` deja Cloud SQL encendido: después de desplegar, pausarlo si no se va a usar.
 - Sin balanceador, Cloud Armor, NAT ni VPN (son los recursos que cobran aunque no haya tráfico).
 
 ## Pausar, reanudar y eliminar

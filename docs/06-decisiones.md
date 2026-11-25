@@ -42,6 +42,9 @@ Cada decisión indica el contexto, lo decidido y su impacto. Se actualiza a medi
 ## D-09 · Eventos sin outbox
 - Tras confirmar cada transacción la API publica el evento en Pub/Sub. Si la publicación falla se registra el error, pero la solicitud no se revierte. Un patrón *outbox* sería lo correcto en producción; queda documentado como limitación.
 
+## D-10 · Modo de autenticación de desarrollo
+- Para desarrollo y pruebas locales existe `AUTH_MODE=dev` (token `dev|uid|email`). La aplicación **se niega a arrancar** en ese modo (o con `ENTORNO=local`) si detecta que corre en Cloud Run (`K_SERVICE` o `CLOUD_RUN_JOB`), por lo que no puede activarse en la nube por error.
+
 ## D-11 · Proyecto GCP y control de gasto
 - **Proyecto:** `lab3-pdi-vpm` (sin organización), creado el 23-11-2026 con `gcloud projects create`.
 - **Facturación:** asociado a la "Cuenta de facturación para educación" (créditos del curso), no a una cuenta personal.
@@ -88,6 +91,3 @@ Cada decisión indica el contexto, lo decidido y su impacto. Se actualiza a medi
 - **ClaveÚnica:** el botón usa el formato del kit oficial "Botón Oficial de ClaveÚnica" v2.0 (colores,
   Roboto, ícono `cu-blanco.svg`), pero sigue **deshabilitado** y rotulado como simulado: no hay integración
   real con ClaveÚnica.
-
-## D-10 · Modo de autenticación de desarrollo
-- Para desarrollo y pruebas locales existe `AUTH_MODE=dev` (token `dev|uid|email`). La aplicación **se niega a arrancar** en ese modo si detecta que corre en Cloud Run (`K_SERVICE`), por lo que no puede activarse en la nube por error.

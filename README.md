@@ -12,7 +12,7 @@ de Permanencia Definitiva**, desplegada en Google Cloud (`southamerica-west1`) m
 
 | Componente | Estado |
 |---|---|
-| API (FastAPI) | ✅ Implementada · 47 pruebas automáticas pasan (SQLite y PostgreSQL 16) |
+| API (FastAPI) | ✅ Implementada · 47 pruebas automáticas pasan (SQLite; 42 verificadas también contra PostgreSQL 16) |
 | Frontend (React) | ✅ Implementado · flujo completo probado en navegador contra la API local |
 | Autenticación real (Identity Platform) | ✅ Registro, login, roles y revocación probados contra GCP (ver `docs/04-pruebas.md`) |
 | Documentos en Cloud Storage | ✅ Bucket privado probado (subida, descarga, no sobrescritura, acceso anónimo bloqueado) |
@@ -35,7 +35,9 @@ app/web/            Portal web (React + Vite, servido por nginx)
 app/notificaciones/ Servicio de notificaciones (Pub/Sub push → Cloud Logging, correo simulado)
 scripts/deploy.ps1  Compila imágenes, aplica Terraform y migra (un comando)
 infra/              Terraform: bootstrap/ (estado local) y main/ (estado en GCS)
-docs/               Documentación y registro de decisiones
+docs/               Informe final, guía de despliegue, pruebas, costos y decisiones
+docs/img/           Capturas del recorrido usadas en el informe
+docs/demo/          Documentos de identidad ficticios para probar la lectura con Gemini
 ```
 
 ## Ejecutar la API en local
@@ -72,6 +74,16 @@ docker compose exec api python -m app.cli bootstrap-admin --email admin@ficticio
 
 En modo local la autenticación usa tokens de desarrollo (`Authorization: Bearer dev|<uid>|<email>`).
 Ese modo **no puede activarse en Cloud Run**: la API se niega a arrancar (ver `docs/06-decisiones.md`, D-10).
+En local la lectura con Gemini está desactivada (`GEMINI_MODELO` vacío), así que esa regla no aparece.
+
+## Desplegar en GCP
+
+El procedimiento completo, desde crear el proyecto hasta el primer administrador, está en
+[`docs/03-despliegue.md`](docs/03-despliegue.md). Con el bootstrap ya aplicado, una versión nueva se despliega con:
+
+```powershell
+./scripts/deploy.ps1
+```
 
 ## Datos de prueba de la validación simulada
 
@@ -86,3 +98,9 @@ Las consultas a Registro Civil, Migraciones, Sistema Central PDI e Interpol est�
 | `15999999-8` | Identidad no coincide (Registro Civil simulado) → "En revisión" |
 | `44555111-2` | Sin registros de viaje → "Observada", pide adjuntar un respaldo de viaje |
 | `12345678-0` | RUT inválido (dígito verificador) → "Observada" |
+
+En GCP, además, Gemini lee el documento de identidad adjunto y compara su número con el RUT del formulario: si
+no coinciden, la solicitud pasa a revisión humana. Para probarlo con un documento coherente están
+[`docs/demo/identidad-ficticia-ensayo.pdf`](docs/demo/identidad-ficticia-ensayo.pdf) (RUT `17654321-3`) e
+[`docs/demo/identidad-ficticia-clase.pdf`](docs/demo/identidad-ficticia-clase.pdf) (RUT `18765432-7`).
+**No suba documentos reales:** el sistema es una prueba de concepto y Gemini procesa los archivos fuera de Chile.

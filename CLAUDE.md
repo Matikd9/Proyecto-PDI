@@ -20,7 +20,8 @@ Todo (código, identificadores, mensajes, documentación) está en español.
   costo estimado y se pide aprobación. Presupuesto total ≈ USD 150 en créditos.
 - No afirmar que algo funciona sin haberlo probado; no inventar URLs, costos ni resultados.
 - Los commits **no llevan** línea `Co-Authored-By` ni atribución a Claude.
-- Las decisiones técnicas se registran en `docs/06-decisiones.md` (D-01, D-02, …).
+- Las decisiones técnicas se registran en `docs/06-decisiones.md` (D-01 a D-14). El informe final está en
+  `docs/00-informe-final.md` (con capturas en `docs/img/`) y los documentos ficticios para la demo en `docs/demo/`.
 
 ## Comandos
 
@@ -87,6 +88,12 @@ FastAPI + SQLAlchemy 2 + Alembic. Rutas bajo `/api/v1`, documentación en `/api/
   modelos (D-08); las siguientes deben usar operaciones Alembic explícitas. Las migraciones corren como Cloud
   Run Job, nunca al arrancar la API.
 - El pool de conexiones es de 3 + 2 porque `db-f1-micro` admite solo 25 conexiones.
+- **Lectura con Gemini** (`servicios/lectura_documentos.py`, D-13): regla `LECTURA_DOCUMENTO` que compara el número
+  del documento de identidad con el formulario usando Vertex AI (endpoint `global`, porque Gemini no está en
+  Santiago). Se activa con `GEMINI_MODELO` (vacío por defecto, así las pruebas y el entorno local no llaman a
+  Vertex AI). Si no confirma el número, o Gemini falla, es una `ALERTA`: va a revisión humana, nunca rechaza.
+- **Certificado PDF** (`servicios/certificados.py`): reportlab, generado al vuelo; usa la fuente Alfa Slab One
+  (`app/fuentes/`, licencia OFL, incluida como package-data) para el logo DPI.
 
 ## Arquitectura del frontend
 
@@ -97,8 +104,8 @@ FastAPI + SQLAlchemy 2 + Alembic. Rutas bajo `/api/v1`, documentación en `/api/
   `add_header` dentro de un `location` anula las heredadas.
 - **Sesión** (`src/lib/auth.tsx`): en modo `dev` guarda un token `dev|email|email` en sessionStorage; en modo
   `firebase` usa Identity Platform, cargando el SDK solo cuando se necesita. El rol siempre se obtiene de
-  `GET /me`. `Protegida` en `componentes/Layout.tsx` solo controla la navegación; la autorización real es la
-  de la API.
+  `GET /me`. `Protegida` en `componentes/Layout.tsx` solo controla la navegación (si el rol no corresponde, redirige
+  al inicio de ese rol, `INICIO_POR_ROL`); la autorización real es la de la API.
 - `src/lib/api.ts` agrega el token y convierte los errores de FastAPI (texto, `{mensaje, campos}` o la lista
   de validación de Pydantic) en un `ErrorApi`. Las descargas protegidas usan `api.descargar` (blob + token).
 - `FormSolicitud.tsx` atiende dos rutas (`/solicitudes/nueva?tramite=X` y `/solicitudes/:id/editar`). Al crear
@@ -145,7 +152,8 @@ corto → job `migrate`).
   contraseña.
 - **Terraform** dividido en `infra/bootstrap` (estado local: bucket de estado, Artifact Registry, cuenta de
   servicio de build) e `infra/main` (backend GCS, imágenes por variable `image_tag` = SHA de git). El
-  balanceador y Cloud Armor van en un módulo opcional desactivado por defecto.
+  balanceador y Cloud Armor **no se implementaron**: se evaluaron en T10 y se descartaron por costo
+  (≈ USD 26/mes fijos).
 - **Estilo del frontend** (ya implementado): inspirado en pdichile.cl (azul `#00234C`, fondo `#EFEFEF`,
   amarillo `#FFD100`, Oswald y Open Sans, botones píldora de 25px, tarjetas de esquinas rectas), con un aviso
   amarillo permanente de prueba de concepto académica.

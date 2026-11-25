@@ -3,7 +3,8 @@
 Procedimiento para replicar la infraestructura en un proyecto propio. Los comandos son para PowerShell.
 En PowerShell, los argumentos `-var-file=...` y `-out=...` de Terraform **deben ir entre comillas**.
 
-> Estado: todos los pasos están implementados y probados en `lab3-pdi-vpm` (23-11-2026).
+> Estado: todos los pasos están implementados y probados en `lab3-pdi-vpm`, incluida la recreación desde cero
+> (23-11-2026; última versión desplegada el 24-11-2026).
 > URL de ejemplo: **https://web-636986210007.southamerica-west1.run.app**
 
 ## Requisitos
@@ -69,6 +70,10 @@ El script hace tres cosas:
    recursos y tarda ~8 minutos (Cloud SQL ~5 min).
 3. **Migra** la base de datos ejecutando el Cloud Run Job `migrate`.
 
+El script no pasa `sql_activa`, así que deja Cloud SQL **encendido** (`ALWAYS`) aunque estuviera pausado.
+La primera vez, la lectura con Gemini puede fallar unos minutos con `PERMISSION_DENIED` mientras se propaga
+el rol `aiplatform.user`; esas solicitudes pasan a revisión humana y luego funciona sin cambios.
+
 Al final muestra la URL del portal. Equivalente manual:
 
 ```powershell
@@ -127,6 +132,10 @@ cd ../bootstrap;    terraform destroy "-var=project_id=lab3-pdi-vpm"
 ```
 
 O, de forma definitiva: `gcloud projects delete lab3-pdi-vpm`.
+
+Identity Platform no se puede desactivar: `destroy` solo lo quita del estado y las cuentas registradas se
+conservan. Al volver a desplegar, un bloque `import` adopta la configuración existente (D-12). Para borrar
+también las cuentas hay que eliminar el proyecto.
 
 **Al destruir `infra/main`, la subred puede tardar en liberarse.** Cloud Run reserva IPs en la subred para
 Direct VPC egress y Google las libera entre minutos y ~2 horas después de borrar los servicios. Mientras tanto
