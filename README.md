@@ -21,7 +21,7 @@ de Permanencia Definitiva**, desplegada en Google Cloud (`southamerica-west1`) m
 
 **URL de ejemplo:** https://web-636986210007.southamerica-west1.run.app
 (si Cloud SQL está pausado para ahorrar créditos, el portal carga pero no responde a operaciones con datos)
-| Despliegue en GCP | ⏳ Pendiente |
+| Despliegue en GCP | ✅
 
 ## Estructura
 
