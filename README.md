@@ -22,8 +22,10 @@ de Permanencia Definitiva**, desplegada en Google Cloud (`southamerica-west1`) m
 | Lectura de documentos con Gemini | ✅ Vertex AI (endpoint global) compara el documento con el formulario (D-13) |
 | Reproducibilidad | ✅ `destroy` completo y recreación desde la documentación (T11) |
 
-**URL de ejemplo:** https://web-636986210007.southamerica-west1.run.app
-(si Cloud SQL está pausado para ahorrar créditos, el portal carga pero no responde a operaciones con datos)
+**URL de ejemplo:** ~~https://web-636986210007.southamerica-west1.run.app~~ — **apagada el 25-11-2026.** Tras la presentación se destruyó toda la
+infraestructura en GCP (`terraform destroy`) para no seguir consumiendo créditos. El repositorio está completo:
+para montarla de nuevo en un proyecto propio, seguir [`docs/03-despliegue.md`](docs/03-despliegue.md) o usar
+`docker compose up --build` en local.
 
 **Informe final:** [`docs/00-informe-final.md`](docs/00-informe-final.md).
 

@@ -5,7 +5,7 @@
 **Profesor:** Nicolás Riderelli
 **Fecha:** 24 de noviembre de 2026
 
-**URL de ejemplo:** https://web-636986210007.southamerica-west1.run.app
+**URL de ejemplo:** https://web-636986210007.southamerica-west1.run.app (apagada el 25-11-2026, tras la presentación, para no seguir consumiendo créditos)
 **Repositorio:** https://github.com/Matikd9/Proyecto-PDI
 
 > Trabajo académico. La plataforma **no es un servicio oficial** de la Policía de Investigaciones de Chile (PDI),
@@ -42,7 +42,7 @@ eliminar el factor humano en la creación de la infraestructura. Los entregables
 |---|---|
 | Archivos de ejecución | `infra/` (Terraform), `scripts/deploy.ps1`, `cloudbuild.yaml`, `docker-compose.yml`, código en `app/` |
 | Documentación paso a paso para replicar la infraestructura | [`docs/03-despliegue.md`](03-despliegue.md) |
-| URL de ejemplo | https://web-636986210007.southamerica-west1.run.app |
+| URL de ejemplo | https://web-636986210007.southamerica-west1.run.app (apagada el 25-11-2026, tras la presentación, para no seguir consumiendo créditos); se recrea con `docs/03-despliegue.md` |
 | Documentación para ejecutar la prueba de concepto | [`README.md`](../README.md) y este informe |
 
 ## 2. Problema y solución propuesta
@@ -275,6 +275,8 @@ habría ocultado. Esos detalles quedaron resueltos en el código y documentados 
 ---
 
 ## Anexo A · Cómo usar la URL de ejemplo
+
+> La URL se apagó el 25-11-2026. Estos pasos sirven igual sobre un despliegue propio o el entorno local.
 
 1. Abrir https://web-636986210007.southamerica-west1.run.app y crear una cuenta con un correo ficticio.
 2. Elegir un trámite, completar el formulario con uno de los RUT ficticios de la tabla y adjuntar un PDF, PNG o

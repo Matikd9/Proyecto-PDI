@@ -5,7 +5,9 @@ En PowerShell, los argumentos `-var-file=...` y `-out=...` de Terraform **deben 
 
 > Estado: todos los pasos están implementados y probados en `lab3-pdi-vpm`, incluida la recreación desde cero
 > (23-11-2026; última versión desplegada el 24-11-2026).
-> URL de ejemplo: **https://web-636986210007.southamerica-west1.run.app**
+> URL de ejemplo: ~~https://web-636986210007.southamerica-west1.run.app~~ — apagada el 25-11-2026: la infraestructura de `lab3-pdi-vpm` se
+> destruyó por completo (`infra/main` e `infra/bootstrap`) para no seguir consumiendo créditos. Este
+> procedimiento sigue sirviendo para recrearla en cualquier proyecto.
 
 ## Requisitos
 

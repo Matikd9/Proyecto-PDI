@@ -124,8 +124,9 @@ terraform init "-backend-config=bucket=lab3-pdi-vpm-tfstate"
 terraform plan "-var-file=../envs/dev.tfvars"    # en PowerShell, -var-file y -out van entre comillas
 ```
 
-Desplegado y probado de punta a punta en https://web-636986210007.southamerica-west1.run.app. Para
-desplegar una versión nueva: `./scripts/deploy.ps1` (Cloud Build → `terraform apply` con `image_tag` = SHA
+Se desplegó y probó de punta a punta en https://web-636986210007.southamerica-west1.run.app, pero el 25-11-2026, tras la
+presentación, se destruyó todo (`infra/main` e `infra/bootstrap`) para no consumir créditos: hoy no hay nada
+desplegado. Para recrearlo, seguir `docs/03-despliegue.md` (bootstrap primero). Para desplegar una versión nueva: `./scripts/deploy.ps1` (Cloud Build → `terraform apply` con `image_tag` = SHA
 corto → job `migrate`).
 
 - `infra/bootstrap` (estado local, solo en la PC de quien lo aplicó): bucket del estado, bucket de build,
